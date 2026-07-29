@@ -36,3 +36,24 @@ async function createGenre(req, res) {
     }
 }
 
+async function updateGenre(req, res) {
+    const { id } = req.params;
+    // Hanya menerima 'genre' dari body
+    const { genre } = req.body; 
+    try {
+        const dataGenre = await db.Genre.findByPk(id);
+        if (!dataGenre) {
+            return res.status(404).json({ error: "Genre not found" });
+        }
+        
+        // Update field genre
+        dataGenre.genre = genre;
+        await dataGenre.save();
+        
+        res.status(200).json(dataGenre);
+    } catch (err) {
+        console.error("Error updating genre:", err.message);
+        res.status(500).json({ error: "Failed to update genre" });
+    }
+}
+
